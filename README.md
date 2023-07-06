@@ -1,1 +1,1 @@
-# minifURL
+# minify.It
