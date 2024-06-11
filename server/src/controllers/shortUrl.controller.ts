@@ -16,7 +16,7 @@ export const createUrl = async (
       res.status(201).send(shortUrl);
     }
   } catch (error) {
-    res.status(500).send({ message: "Something went wrong" });
+    res.status(500).send({ message: "Something on 'create' went wrong" });
   }
 };
 
@@ -25,7 +25,7 @@ export const getAllUrl = async (
   res: express.Response
 ) => {
   try {
-    const shortlUrls = await urlModel.find();
+    const shortlUrls = await urlModel.find().sort({ createdAt: -1 });
     if (shortlUrls.length < 0) {
       res.status(404).send({ message: "ShortUrl is not Found!" });
     } else {
@@ -41,14 +41,14 @@ export const getSingleUrl = async (
   res: express.Response
 ) => {
   try {
-    const shortlUrl = await urlModel.findById(req.params.id);
-    if (!shortlUrl) {
+    const shortUrl = await urlModel.findOne({ shortUrl: req.params.id });
+    if (!shortUrl) {
       res.status(404).send({ message: "Full Url not found" });
     } else {
       //   res.status(201).send(`${shortlUrl.fullUrl}`);
-      shortlUrl.clicks++;
-      shortlUrl.save();
-      res.redirect(`${shortlUrl.fullUrl}`);
+      shortUrl.clicks++;
+      shortUrl.save();
+      res.redirect(`${shortUrl.fullUrl}`);
     }
   } catch (error) {
     res.status(500).send({ message: "Something went wrong" });
