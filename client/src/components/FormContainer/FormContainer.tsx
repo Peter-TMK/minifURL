@@ -2,15 +2,20 @@ import * as React from "react";
 import axios from "axios";
 import { serverUrl } from "../../helpers/Constants";
 
-interface IFormContainerProps {}
+interface IFormContainerProps {
+  updateReloadState: () => void;
+}
 
-const FormContainer: React.FunctionComponent<IFormContainerProps> = () => {
+const FormContainer: React.FunctionComponent<IFormContainerProps> = (props) => {
+  const { updateReloadState } = props;
   const [fullUrl, setFullUrl] = React.useState<string>("");
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await axios.post(`${serverUrl}/shorturl`, { fullUrl: fullUrl });
       setFullUrl("");
+      updateReloadState();
     } catch (error) {
       console.log(error);
     }
